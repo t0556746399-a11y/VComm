@@ -1,0 +1,266 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap');
+
+:root {
+  --bell-bg: #ffffff;
+  --bell-border: #e2e6ef;
+  --bell-border-hover: #6366f1;
+  --accent: #6366f1;
+  --accent-light: #eef2ff;
+  --accent-border: #c7d2fe;
+  --accent-hot: #ef4444;
+  --accent-ok: #22c55e;
+  --accent-warn: #f59e0b;
+  --text-primary: #1e293b;
+  --text-muted: #94a3b8;
+  --panel-bg: #ffffff;
+  --panel-shadow: 0 8px 32px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.06);
+  --item-hover: #f8faff;
+  --badge-size: 19px;
+  --panel-width: 320px;
+}
+
+/* ── Container ── */
+.bell-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Rubik', sans-serif;
+  direction: rtl;
+}
+
+/* ── Bell Button ── */
+.bell-container > button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--bell-border);
+  border-radius: 12px;
+  background: var(--bell-bg);
+  cursor: pointer;
+  outline: none;
+  color: #475569;
+  font-size: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+
+.bell-container > button:hover {
+  border-color: var(--bell-border-hover);
+  box-shadow: 0 2px 10px rgba(99,102,241,.15);
+  transform: translateY(-1px);
+}
+
+.bell-container > button:active {
+  transform: scale(.96);
+}
+
+.bell-icon {
+  display: inline-block;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.bell-container > button:hover .bell-icon {
+  transform: rotate(-14deg) scale(1.1);
+}
+
+.bell-container > button.ringing .bell-icon {
+  animation: bell-ring 2.5s ease infinite;
+}
+
+@keyframes bell-ring {
+  0%,100% { transform: rotate(0); }
+  10%      { transform: rotate(-14deg); }
+  20%      { transform: rotate(14deg); }
+  30%      { transform: rotate(-10deg); }
+  40%      { transform: rotate(10deg); }
+  50%      { transform: rotate(0); }
+}
+
+/* ── Badge ── */
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: var(--badge-size);
+  height: var(--badge-size);
+  padding: 0 5px;
+  border-radius: 100px;
+  background: var(--accent-hot);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Rubik', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #f0f2f7;
+  animation: badge-pop .4s cubic-bezier(.34,1.56,.64,1) both, badge-ripple 2s ease-out 1s infinite;
+  z-index: 2;
+}
+
+@keyframes badge-pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+@keyframes badge-ripple {
+  0%   { box-shadow: 0 0 0 0 rgba(239,68,68,.35); }
+  70%  { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
+  100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+}
+
+/* ── Connection dot ── */
+.connection-dot {
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid #f0f2f7;
+  background: var(--accent-ok);
+}
+
+.connection-dot.disconnected {
+  background: #94a3b8;
+}
+
+/* ── Notification Panel ──
+   right:0 מיישר את הפאנל לצד ימין של הכפתור
+   כך שהוא נפתח פנימה ולא מחוץ למסך
+*/
+.notification-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: var(--panel-width);
+  max-height: 460px;
+  background: var(--panel-bg);
+  border: 1px solid var(--bell-border);
+  border-radius: 18px;
+  box-shadow: var(--panel-shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+  z-index: 999;
+  animation: panel-in .22s cubic-bezier(.34,1.4,.64,1) both;
+  transform-origin: top right;
+}
+
+@keyframes panel-in {
+  from { opacity: 0; transform: scale(.92) translateY(-8px); }
+  to   { opacity: 1; transform: scale(1)  translateY(0); }
+}
+
+/* Panel header */
+.notification-panel .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 18px 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-panel .panel-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.notification-panel .panel-count {
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-light);
+  border: 1px solid var(--accent-border);
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+/* Scroll area */
+.notification-panel .panel-body {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #e2e6ef transparent;
+}
+
+/* ── Empty state ── */
+.notification-panel .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.notification-panel .empty-state .empty-icon {
+  font-size: 30px;
+  opacity: .4;
+}
+
+/* ── Notification Item ── */
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 18px;
+  border-bottom: 1px solid #f8fafc;
+  cursor: pointer;
+  position: relative;
+  transition: background .15s;
+  direction: rtl;
+  text-align: right;
+}
+
+.notification-item:last-child { border-bottom: none; }
+.notification-item:hover { background: var(--item-hover); }
+
+/* פס צבע בצד ימין לפריטים לא נקראים */
+.notification-item.unread::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+/* Severity dot */
+.notification-item .severity-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.severity-dot.high   { background: var(--accent-hot); }
+.severity-dot.medium { background: var(--accent-warn); }
+.severity-dot.low    { background: var(--accent-ok); }
+
+.notification-item .item-content { flex: 1; min-width: 0; }
+
+.notification-item .item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-item .item-meta {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
